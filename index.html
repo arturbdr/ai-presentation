@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLAUDE.md &amp; .claude/rules</title>
+
+<link rel="stylesheet" href="vendor/reset.css">
+<link rel="stylesheet" href="vendor/reveal.css">
+<link rel="stylesheet" href="vendor/plugin/monokai.css">
+
+<style>
+  @font-face {
+    font-family: "Inter";
+    src: url("vendor/fonts/inter-latin-400-normal.woff2") format("woff2");
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "Inter";
+    src: url("vendor/fonts/inter-latin-600-normal.woff2") format("woff2");
+    font-weight: 600; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "Inter";
+    src: url("vendor/fonts/inter-latin-700-normal.woff2") format("woff2");
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("vendor/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("vendor/fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2");
+    font-weight: 600; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("vendor/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2");
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --bg: #1c1b1a;
+    --panel: #242322;
+    --panel-2: #2b2a28;
+    --border: #3a3835;
+    --text: #e9e6e1;
+    --muted: #8f8b85;
+    --accent: #cc785c;
+    --accent-deep: #8c4e39;
+    --code-bg: #17171a;
+    --mono: "JetBrains Mono", "Courier New", monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+  }
+
+  html, body { background: var(--bg); }
+  .reveal-viewport { background-color: var(--bg) !important; }
+  .reveal { font-family: var(--sans); color: var(--text); }
+
+  .reveal .slides section {
+    text-align: left;
+    padding: 56px 64px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.75em;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  .kicker::before { content: "$ "; opacity: 0.6; }
+
+  .reveal h1, .reveal h2, .reveal h3 {
+    font-family: var(--sans);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 0.3em 0;
+  }
+  .reveal h2 { font-size: 2.0em; border: none; }
+  .reveal p, .reveal li { font-size: 0.78em; line-height: 1.55; }
+  .reveal ul, .reveal ol { display: block; }
+
+  .title-slide { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+  .title-slide h1 { font-size: 3.1em; }
+  .title-slide .subtitle { font-family: var(--mono); font-size: 0.72em; color: var(--muted); margin-top: 0.7em; }
+  .title-slide .path {
+    font-family: var(--mono); font-size: 0.55em; color: var(--accent);
+    margin-top: 2.6em; opacity: 0.85;
+  }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 30px; }
+  .grid2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 30px; }
+
+  .grid-tree { display: grid; grid-template-columns: 1fr 350px; gap: 30px; align-items: start; }
+  .grid-tree .filename-bar { margin-top: 0; }
+  .tree-panel { position: relative; }
+  .tree-panel .filename-bar { font-size: 0.6em; }
+  .tree-panel pre { margin-top: 14px; }
+  .tree-panel pre code {
+    display: block;
+    white-space: pre;
+    padding: 18px 20px !important;
+    font-size: 0.56em;
+    line-height: 1.55;
+    max-height: 480px;
+    overflow: hidden;
+  }
+  .tree-new { color: var(--accent); font-weight: 600; }
+  .tree-old { color: var(--muted); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 34px 36px;
+  }
+  .card h3 {
+    font-family: var(--mono); font-size: 1.05em; color: var(--accent);
+    margin: 0 0 8px 0; font-weight: 600;
+  }
+  .card .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--accent); color: #1c1b1a;
+    font-family: var(--mono); font-weight: 700; font-size: 0.6em;
+    margin-bottom: 16px;
+  }
+  .card p { color: var(--muted); margin: 8px 0 0 0; }
+  .card ul { margin: 12px 0 0 0; padding-left: 1.1em; }
+  .card li { color: var(--text); margin-bottom: 14px; }
+  .card li::marker { color: var(--accent); }
+
+  .filecard { position: relative; }
+  .filecard .tag {
+    position: absolute; top: -13px; left: 24px;
+    background: var(--accent); color: #1c1b1a;
+    font-family: var(--mono); font-size: 0.4em; font-weight: 700;
+    padding: 4px 10px; border-radius: 5px; letter-spacing: 0.02em;
+  }
+
+  .reveal pre {
+    box-shadow: none;
+    width: 100%;
+    margin-top: 18px;
+  }
+  .reveal pre code {
+    background: var(--code-bg) !important;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: var(--mono) !important;
+    font-size: 0.68em;
+    line-height: 1.62;
+    max-height: 560px;
+    padding: 32px 36px !important;
+  }
+  .filename-bar {
+    font-family: var(--mono);
+    font-size: 0.65em;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 30px;
+  }
+  .filename-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .filename-bar b { color: var(--text); font-weight: 600; }
+
+  .why-col { align-self: start; }
+  .why-col h3 { font-family: var(--sans); font-size: 1.2em; color: var(--text); font-weight: 700; margin-bottom: 18px; }
+  .why-col ul { padding-left: 1.1em; margin: 0; }
+  .why-col li { margin-bottom: 20px; color: var(--text); }
+  .why-col li::marker { color: var(--accent); }
+
+  .caption {
+    font-family: var(--sans);
+    font-size: 0.58em;
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    margin-top: 30px;
+    max-width: 90%;
+    margin-left: auto; margin-right: auto;
+  }
+
+  .diagram-wrap { display: flex; justify-content: center; margin-top: 34px; }
+  .diagram-wrap svg { width: 100%; max-width: 1140px; height: auto; }
+
+  .steps { margin-top: 30px; }
+  .step { display: flex; gap: 22px; margin-bottom: 36px; align-items: flex-start; }
+  .step .num {
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--accent); color: #1c1b1a;
+    font-family: var(--mono); font-weight: 700; font-size: 0.68em;
+  }
+  .step p { margin: 0; padding-top: 3px; }
+
+  .reveal .progress { color: var(--accent); }
+  .reveal .controls { color: var(--accent); }
+  .reveal .slide-number {
+    background: transparent; color: var(--muted);
+    font-family: var(--mono); font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- 1. TITLE -->
+    <section>
+      <div class="title-slide">
+        <div class="kicker">whoami</div>
+        <h1>CLAUDE.md &amp; .claude/rules</h1>
+        <div class="subtitle">// why Claude Code, and any LLM or agent, needs project rules, not just prompts</div>
+        <div class="path">~/project  .git  CLAUDE.md  .claude/rules/</div>
+      </div>
+    </section>
+
+    <!-- 2. THE PROBLEM -->
+    <section>
+      <div class="kicker">the problem</div>
+      <h2>Without rules, your AI guesses</h2>
+      <div class="grid2x2">
+        <div class="card">
+          <div class="num">01</div>
+          <h3 style="font-family: var(--sans); font-size: 1em; color: var(--text);">No memory between sessions</h3>
+          <p>Each conversation starts from zero. The same instructions get repeated every session.</p>
+        </div>
+        <div class="card">
+          <div class="num">02</div>
+          <h3 style="font-family: var(--sans); font-size: 1em; color: var(--text);">Generic defaults</h3>
+          <p>Package layout, DTOs, and boilerplate that do not match how this codebase is structured.</p>
+        </div>
+        <div class="card">
+          <div class="num">03</div>
+          <h3 style="font-family: var(--sans); font-size: 1em; color: var(--text);">Skipped verification</h3>
+          <p>Code changes land without a build, a test run, or a lint pass.</p>
+        </div>
+        <div class="card">
+          <div class="num">04</div>
+          <h3 style="font-family: var(--sans); font-size: 1em; color: var(--text);">Inconsistent answers</h3>
+          <p>Two developers asking the same question get two different results.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2b. THE EXAMPLE APP -->
+    <section>
+      <div class="kicker">the example</div>
+      <h2>Meet campaign-service</h2>
+      <p>A small Kotlin + Spring Boot service, already in production. No CLAUDE.md, no .claude/rules &mdash; yet. Everything from here on builds on top of this.</p>
+      <div style="display: flex; justify-content: center; margin-top: 30px;">
+        <div style="width: 560px;">
+          <div class="filename-bar" style="margin-top: 0;"><span class="dot"></span><b>project structure</b><span>&nbsp;·&nbsp;before</span></div>
+          <pre><code class="language-plaintext" data-trim data-noescape>campaign-service/
+├── pom.xml
+└── src/main/kotlin/com/acme/campaigns/
+    ├── domain/
+    │   └── Campaign.kt
+    ├── usecase/
+    │   ├── CreateCampaign.kt
+    │   └── CampaignRepositoryPort.kt
+    └── gateway/
+        ├── controller/
+        │   └── CampaignController.kt
+        └── jdbc/
+            └── CampaignJdbcRepository.kt</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. WHAT THEY ARE -->
+    <section>
+      <div class="kicker">how it works</div>
+      <h2>Project memory, loaded automatically</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>CLAUDE.md</h3>
+          <ul>
+            <li>Root-level Markdown file</li>
+            <li>Loaded in full at the start of every session</li>
+            <li>Project, user, or managed-org scope</li>
+            <li>Recursed from the working directory up to the repo root</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>.claude/rules/*.md</h3>
+          <ul>
+            <li>One file per topic: testing.md, architecture.md, and so on</li>
+            <li>Can be scoped to specific file types or paths</li>
+            <li>Loaded alongside CLAUDE.md, same session</li>
+            <li>Keeps the root file short as the project grows</li>
+          </ul>
+        </div>
+      </div>
+      <p class="caption">Both are committed to the repo and reviewed like code. The whole team works from the same rules, not just whoever wrote the last prompt.</p>
+    </section>
+
+    <!-- 4. EXAMPLE: CLAUDE.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>What actually goes in CLAUDE.md</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>CLAUDE.md</b><span>&nbsp;·&nbsp;project root</span></div>
+          <pre><code class="language-markdown" data-trim data-noescape># CLAUDE.md
+
+## Communication
+- Expert-level audience. Skip basic explanations.
+
+## Guardrails
+- Proceed only when ~95% confident in the approach.
+- Never assume unfamiliar code, libraries, or framework
+  behavior &mdash; verify by reading the code first.
+- When in doubt, stop and ask. Do not guess.
+
+## Stack
+- Kotlin 1.9, Spring Boot 4, Maven
+- Persistence: Spring Data JDBC, PostgreSQL
+- Tests: JUnit 5, MockK, Testcontainers for integration tests</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-new">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+└── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+    ├── <span class="tree-old">domain/</span>
+    │   └── <span class="tree-old">Campaign.kt</span>
+    ├── <span class="tree-old">usecase/</span>
+    │   ├── <span class="tree-old">CreateCampaign.kt</span>
+    │   └── <span class="tree-old">CampaignRepositoryPort.kt</span>
+    └── <span class="tree-old">gateway/</span>
+        ├── <span class="tree-old">controller/</span>
+        │   └── <span class="tree-old">CampaignController.kt</span>
+        └── <span class="tree-old">jdbc/</span>
+            └── <span class="tree-old">CampaignJdbcRepository.kt</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4b. EXAMPLE: CLAUDE.md, continued -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>What actually goes in CLAUDE.md (cont.)</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>CLAUDE.md</b><span>&nbsp;·&nbsp;project root</span></div>
+          <pre><code class="language-markdown" data-trim data-noescape>## Architecture
+Hexagonal. Full rules in .claude/rules/architecture.md. Summary:
+domain has no framework imports, usecase depends on domain only,
+adapters live under gateway/.
+
+## Workflow
+- After any change: mvn test, mvn verify -Pit, then mvn spotless:check
+- Do not report a task done if build, tests, or lint fail
+- New endpoints: plural nouns, resource-based paths
+
+## Rules
+@.claude/rules/testing.md
+@.claude/rules/architecture.md
+@.claude/rules/kotlin.md
+@.claude/rules/api.md
+@.claude/rules/verification.md</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   └── <span class="tree-old">Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   ├── <span class="tree-old">CreateCampaign.kt</span>
+│   │   └── <span class="tree-old">CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   └── <span class="tree-old">CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           └── <span class="tree-old">CampaignJdbcRepository.kt</span>
+└── <span class="tree-new">.claude/</span>
+    └── <span class="tree-new">rules/</span>
+        ├── <span class="tree-new">testing.md</span>
+        ├── <span class="tree-new">architecture.md</span>
+        ├── <span class="tree-new">kotlin.md</span>
+        ├── <span class="tree-new">api.md</span>
+        └── <span class="tree-new">verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. EXAMPLE: testing.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: testing guidelines</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/testing.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape># Testing rules
+
+## Frameworks
+- JUnit 5 + MockK. Never introduce Mockito.
+- Testcontainers for anything touching Postgres. No H2.
+
+## Structure
+- One behavior per test. The name states the behavior,
+  not the method under test.
+- Always structure the body with // given, // when,
+  // then comments, in that order. No other inline
+  comments.
+- Build test data with builders, not inline object
+  literals.
+
+## Assertions
+- Use AssertJ fluent assertions: assertThat(result)
+  .isEqualTo(...). Never JUnit's assertEquals/assertTrue.
+- Chain related checks on one assertThat(...) instead of
+  repeating it per field.
+
+## Coverage
+- Every new usecase ships a test for at least one failure path.
+- Controller tests use @WebMvcTest, not full @SpringBootTest.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   └── <span class="tree-old">Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   ├── <span class="tree-old">CreateCampaign.kt</span>
+│   │   └── <span class="tree-old">CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   └── <span class="tree-old">CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           └── <span class="tree-old">CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    └── <span class="tree-old">rules/</span>
+        ├── <span class="tree-new">testing.md</span>
+        ├── <span class="tree-old">architecture.md</span>
+        ├── <span class="tree-old">kotlin.md</span>
+        ├── <span class="tree-old">api.md</span>
+        └── <span class="tree-old">verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. EXAMPLE: architecture.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: architecture guidelines</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/architecture.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape># Architecture rules
+
+## Layering
+- domain/              entities, value objects, business
+                        rules. Zero framework imports.
+- usecase/             application logic. Depends on
+                        domain only.
+- gateway/
+  ├── controller/      inbound HTTP adapters. Depend on
+  │                    usecase.
+  └── jdbc/            outbound persistence adapters.
+                        Implement a port interface owned
+                        by usecase.
+
+## Boundaries
+- gateway/controller and gateway/jdbc never depend on each other.
+- New persistence code goes in gateway/jdbc, never in domain
+  or usecase.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-new">domain/</span>
+│   │   └── <span class="tree-old">Campaign.kt</span>
+│   ├── <span class="tree-new">usecase/</span>
+│   │   ├── <span class="tree-old">CreateCampaign.kt</span>
+│   │   └── <span class="tree-old">CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-new">gateway/</span>
+│       ├── <span class="tree-new">controller/</span>
+│       │   └── <span class="tree-old">CampaignController.kt</span>
+│       └── <span class="tree-new">jdbc/</span>
+│           └── <span class="tree-old">CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    └── <span class="tree-old">rules/</span>
+        ├── <span class="tree-old">testing.md</span>
+        ├── <span class="tree-new">architecture.md</span>
+        ├── <span class="tree-old">kotlin.md</span>
+        ├── <span class="tree-old">api.md</span>
+        └── <span class="tree-old">verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6b. EXAMPLE: architecture.md, continued -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: architecture guidelines (cont.)</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/architecture.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>## Naming
+- Use cases are verbs: CreateCampaign, CancelCampaign.
+- Ports are nouns with a Port suffix: CampaignRepositoryPort.
+
+## Clean Code
+- Small, single-purpose functions; one level of
+  abstraction each.
+- Intention-revealing names; no abbreviations or magic
+  values.
+- No hidden side effects behind getters or "query" methods.
+- Guard clauses over nested if/else.
+- Follow SOLID; one reason to change per class or function.
+- No comments unless asked. Exception: // given/when/then
+  in tests.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-new">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-new">├── CreateCampaign.kt</span>
+│   │   <span class="tree-new">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-new">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-new">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-new">├── architecture.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6c. EXAMPLE: kotlin.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: Kotlin conventions</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/kotlin.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape># Kotlin conventions
+
+## Language idioms
+- Model state with data classes; model alternatives with
+  sealed classes/interfaces, not enums with fields.
+- Extension functions for behavior that reads naturally
+  on the receiver. Do not overuse: a member fits a class's
+  own concern, an extension fits a cross-cutting one.
+- Prefer immutability: val over var, immutable collections
+  over mutable ones.
+
+## Calls
+- Named arguments on any call with more than two
+  parameters, or where types alone don't disambiguate
+  meaning (e.g. two Boolean or String parameters in a row).</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-new">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6e. EXAMPLE: api.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: API &amp; controller guidelines</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/api.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape># API rules
+
+## Controllers
+- Every endpoint is documented (KDoc) and exposed via
+  OpenAPI (see below).
+- Secured with Spring Security + JWT by default. Public
+  routes must opt out explicitly, e.g. @PublicEndpoint.
+
+## URI conventions
+- Resource nouns, plural: /campaigns, /campaigns/{id}.
+- No verbs in the path: /campaigns/{id}/cancel, never
+  /cancelCampaign.
+- Nest one level at most: /campaigns/{id}/items.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-new">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-new">├── api.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6f. EXAMPLE: api.md, continued -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: API &amp; controller guidelines (cont.)</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/api.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>## OpenAPI / Swagger
+- Every controller carries @Tag; every endpoint carries
+  @Operation and an @ApiResponse per status code.
+- Swagger UI must build with zero missing-schema warnings.
+
+## Request/Response DTOs
+- Never expose domain or entity types on a controller.
+- One DTO for the request, one for the response body.
+  Never reuse a DTO for both directions.
+- Every field has @Schema(description = "..."). No
+  undocumented fields in Swagger.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-new">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-new">├── api.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. EXAMPLE: verification.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: verify before you're done</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/verification.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape># Verification rules
+
+## After every change, always
+1. mvn test              run the unit tests
+2. mvn verify -Pit       run the integration tests
+3. mvn spotless:check    lint the code (ktlint via Spotless)
+
+## Rules
+- Do not report a task finished if any command fails.
+- If a command is missing or errors out, stop and ask.
+  Do not guess.
+- Never suppress a linter warning just to make it pass.
+- Dead code check: scan for unused imports, functions,
+  classes, and parameters after every change. Remove them.
+- Never run git add, git commit, or git push.
+
+## Refactoring
+- A refactor never changes behavior. If output changes,
+  it is a rewrite, not a refactor.
+- Before refactoring, check for a test that covers the
+  code. None exists? Write it first, then refactor.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-new">pom.xml</span>
+├── <span class="tree-old">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-new">└── verification.md</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. GETTING STARTED -->
+    <section>
+      <div class="kicker">next steps</div>
+      <h2>Getting started</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <p>Start with one CLAUDE.md at the project root: stack, layering rules, the two commands to run after a change.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <p>Split into .claude/rules/*.md files as the root file grows past a few topics.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <p>Commit both. Review changes to rules the same way you review changes to code.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <p>A rule that gets ignored needs to be more specific, not repeated louder.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. WHY IT MATTERS -->
+    <section>
+      <div class="kicker">why it matters</div>
+      <h2>Why bother with rules at all?</h2>
+      <div class="grid2">
+        <div class="why-col">
+          <ul>
+            <li><b>Fewer hallucinated conventions.</b> Claude answers from
+              the rule instead of guessing how your team does things.</li>
+            <li><b>Consistent, team-decided behavior.</b> Every session
+              follows the same conventions, not whoever wrote the last
+              prompt.</li>
+            <li><b>Easier for outside contributors.</b> A new teammate,
+              or another team opening a PR, follows the same file
+              everyone else does.</li>
+          </ul>
+        </div>
+        <div class="why-col">
+          <ul>
+            <li><b>Less spent rediscovering the codebase.</b> No
+              re-exploring it each session to infer conventions that
+              are already written down.</li>
+            <li><b>Faster ramp-up, human or AI.</b> Reading one
+              CLAUDE.md beats reverse-engineering a project from
+              scratch.</li>
+            <li><b>Reviewable like code.</b> Rules live in git and get
+              diffed and reviewed, instead of decaying in a Slack
+              thread.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="caption">Each of these maps back to a problem from the start of this talk: no memory, generic defaults, skipped verification, inconsistent answers.</p>
+    </section>
+
+    <!-- 11. OPEN DISCUSSION -->
+    <section>
+      <div class="kicker">open discussion</div>
+      <h2>What if I'm not on Claude Code?</h2>
+      <div class="grid2">
+        <div>
+          <div class="steps" style="margin-top: 10px;">
+            <div class="step">
+              <div class="num">?</div>
+              <p>Does your tool already support something like this?</p>
+            </div>
+            <div class="step">
+              <div class="num">?</div>
+              <p>Could one rules file serve more than one AI tool?</p>
+            </div>
+            <div class="step">
+              <div class="num">?</div>
+              <p>What actually breaks when the AI ignores the file?</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-family: var(--sans); font-size: 1em; color: var(--text);">A few equivalents out there</h3>
+          <ul>
+            <li>Cursor &mdash; own format, <span style="font-family: var(--mono); color: var(--accent);">.cursor/rules/*.mdc</span>. Reads AGENTS.md too, not CLAUDE.md.</li>
+            <li>GitHub Copilot &mdash; <span style="font-family: var(--mono); color: var(--accent);">.github/copilot-instructions.md</span>, plus path-scoped <span style="font-family: var(--mono); color: var(--accent);">.github/instructions/*.md</span></li>
+            <li>Windsurf &mdash; <span style="font-family: var(--mono); color: var(--accent);">.windsurfrules</span></li>
+            <li>AGENTS.md &mdash; the open convention. As of Sept 2026, Claude Code, Cursor, and Copilot's coding agent all read it.</li>
+          </ul>
+          <p>The file name changes. The idea &mdash; write the decision down once, let every session and every tool read it &mdash; doesn't.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. COPILOT PRACTICAL -->
+    <section>
+      <div class="kicker">practical</div>
+      <h2>Getting GitHub Copilot to read this</h2>
+      <div class="grid2">
+        <div class="steps" style="margin-top: 6px;">
+          <div class="step">
+            <div class="num">1</div>
+            <p>Copilot's coding agent already reads CLAUDE.md directly, alongside its own formats. If that's the product in use, there's nothing to convert.</p>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <p>For the one-file-per-topic split, mirror each .claude/rules/*.md into .github/instructions/*.instructions.md with an applyTo glob.</p>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <p>For the lowest common denominator across every tool, add a root AGENTS.md.</p>
+          </div>
+        </div>
+        <div>
+          <div class="filename-bar" style="margin-top: 0;"><span class="dot"></span><b>.github/instructions/testing.instructions.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>---
+applyTo: "src/test/**"
+---
+
+# Testing rules
+(same content as .claude/rules/testing.md)</code></pre>
+        </div>
+      </div>
+      <p class="caption">Confirmed for GitHub's Copilot coding agent as of 2026. Copilot Chat in VS Code has its own, separate AGENTS.md support, which was opt-in at last check &mdash; verify before relying on it.</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal.js"></script>
+<script src="vendor/plugin/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    controls: true,
+    progress: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    plugins: [ RevealHighlight ]
+  });
+</script>
+</body>
+</html>
