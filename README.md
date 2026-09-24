@@ -29,14 +29,17 @@ then visit the printed localhost URL.
 ## Editing
 
 Everything is in `index.html` — slide content lives in the `<section>`
-elements, styling in the `<style>` block at the top. No build step: edit
+elements, speaker notes in each slide's `<aside class="notes">`, styling
+in the `<style>` block at the top. No build step: edit
 and refresh.
 
 ## Structure
 
     index.html
+    img/img1–img6.png                    — story illustrations, one per chapter slide
     vendor/
       reveal.js, reveal.css, reset.css   — reveal.js core (v6.0.2)
       plugin/highlight.js, monokai.css   — syntax highlighting for the
                                             CLAUDE.md / .claude/rules examples
+      plugin/notes.js                    — speaker notes window (`S`)
       fonts/                             — Inter + JetBrains Mono (woff2)

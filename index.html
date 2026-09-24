@@ -87,6 +87,8 @@
   .reveal h2 { font-size: 2.0em; border: none; }
   .reveal p, .reveal li { font-size: 0.78em; line-height: 1.55; }
   .reveal ul, .reveal ol { display: block; }
+  .reveal b, .reveal strong { font-weight: 700; }
+  .step b { color: var(--accent); }
 
   .title-slide { display: flex; flex-direction: column; justify-content: center; height: 100%; }
   .title-slide h1 { font-size: 3.1em; }
@@ -98,6 +100,36 @@
 
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 30px; }
   .grid2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 30px; }
+
+  .grid3x2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 26px; }
+  .grid3x2 .card { padding: 24px 26px; }
+  .grid3x2 .card .num { margin-bottom: 10px; }
+  .grid3x2 .card h3 { font-family: var(--sans); font-size: 1em; color: var(--text); }
+  .grid3x2 .card p { font-size: 0.74em; }
+
+  .dodont { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 22px; }
+  .dodont .card { padding: 24px 28px; }
+  .dodont .card h3 { font-family: var(--sans); font-size: 1em; margin-bottom: 4px; }
+  .dodont .dont h3 { color: var(--muted); }
+  .dodont li { font-size: 0.76em; margin-bottom: 12px; }
+  .dodont .dont li::marker { color: var(--muted); }
+
+  .ba { display: grid; grid-template-columns: 190px 1fr 1.35fr; margin-top: 22px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .ba > div { padding: 15px 20px; font-size: 0.7em; line-height: 1.45; border-top: 1px solid var(--border); }
+  .ba > .h { background: var(--panel-2); font-family: var(--mono); color: var(--muted); border-top: none; font-size: 0.55em; letter-spacing: 0.04em; }
+  .ba .why { color: var(--accent); font-weight: 600; }
+  .ba .bad { color: var(--muted); font-family: var(--mono); font-size: 0.64em; }
+  .ba .good { font-family: var(--mono); font-size: 0.64em; }
+
+  .source { font-family: var(--mono); font-size: 0.45em; color: var(--muted); margin-top: 18px; text-align: center; }
+
+  .fixes { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 40px; }
+  .fixes .card { padding: 42px 44px; }
+  .fixes .was {
+    font-family: var(--mono); font-size: 0.85em; color: var(--muted);
+    text-decoration: line-through; text-decoration-color: var(--accent);
+  }
+  .fixes .now { font-size: 1.6em; font-weight: 700; margin-top: 10px; line-height: 1.2; }
 
   .grid-tree { display: grid; grid-template-columns: 1fr 350px; gap: 30px; align-items: start; }
   .grid-tree .filename-bar { margin-top: 0; }
@@ -156,6 +188,7 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     font-family: var(--mono) !important;
+    font-variant-ligatures: none;
     font-size: 0.68em;
     line-height: 1.62;
     max-height: 560px;
@@ -202,6 +235,27 @@
   }
   .step p { margin: 0; padding-top: 3px; }
 
+  /* Story chapters: full-slide illustrations with a short caption */
+  .reveal .slides section.chapter { padding: 0; }
+  .reveal .chapter img {
+    display: block; margin: 0; border: 0; background: none; box-shadow: none;
+    max-width: none; max-height: none;
+  }
+  .reveal .chapter-full img { width: 100%; height: 100%; object-fit: contain; }
+  .reveal .chapter-split img { position: absolute; left: 0; top: 0; height: 100%; width: auto; }
+  .chapter-text h2 { font-size: 1.55em; margin-bottom: 0.25em; }
+  .chapter-text p { margin: 0; }
+  .chapter-split .chapter-text {
+    position: absolute; left: 836px; right: 56px; top: 50%; transform: translateY(-50%);
+  }
+  .chapter-full .chapter-text {
+    position: absolute; width: 560px; box-sizing: border-box;
+    background: rgba(24, 23, 22, 0.86); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 28px;
+  }
+  .chapter-text.pos-bc { left: 50%; bottom: 36px; transform: translateX(-50%); }
+  .chapter-text.pos-br { right: 124px; bottom: 30px; }
+
   .reveal .progress { color: var(--accent); }
   .reveal .controls { color: var(--accent); }
   .reveal .slide-number {
@@ -222,6 +276,24 @@
         <div class="subtitle">// why Claude Code, and any LLM or agent, needs project rules, not just prompts</div>
         <div class="path">~/project  .git  CLAUDE.md  .claude/rules/</div>
       </div>
+      <aside class="notes">
+        The point of this talk: a prompt helps one session, a committed rules file helps every session for every developer. First WHY: what goes wrong without rules. Then HOW: a real service, built up one file at a time.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 1 -->
+    <section class="chapter chapter-split">
+      <img data-src="img/img1.png" alt="Duke, the Java mascot, crossing swords with the Anthropic mascot">
+      <div class="chapter-text">
+        <div class="kicker">chapter 1 · the duel</div>
+        <h2>One developer. One AI.</h2>
+        <p>It's fast, it's confident, and it has no idea how your team builds software.</p>
+      </div>
+      <aside class="notes">
+        Tell this as a story. Meet Duke: that's us, the developers, with our codebase and our conventions.<br>
+        First duel: one developer, one AI assistant. It writes code quickly and sounds sure of itself, but it has never seen our architecture, our test stack or our standards.<br>
+        Point at the stone on the right: "Better AI together? ...or not." That's the question for this talk.
+      </aside>
     </section>
 
     <!-- 2. THE PROBLEM -->
@@ -250,6 +322,56 @@
           <p>Two developers asking the same question get two different results.</p>
         </div>
       </div>
+      <aside class="notes">
+        WHY, part one. Each card is a failure you have probably seen already. Keep these four in mind, because the last slide maps every one of them to a fix.<br>
+        - No memory: you re-explain the stack every session.<br>
+        - Generic defaults: the model writes the average Spring app, not ours.<br>
+        - Skipped verification: "done" without running anything.<br>
+        - Inconsistent answers: two developers, two different styles.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 2 -->
+    <section class="chapter chapter-split">
+      <img data-src="img/img2.png" alt="Duke crossing swords with the OpenAI mascot">
+      <div class="chapter-text">
+        <div class="kicker">chapter 2 · a new challenger</div>
+        <h2>New tool. Same fight.</h2>
+        <p>Switch assistants and you start from zero. Nothing you explained yesterday carries over.</p>
+      </div>
+      <aside class="notes">
+        Problem card 01, no memory. Another tool, or just a new session with the same tool, and the fight starts over.<br>
+        Everything you explained in yesterday's prompt is gone. You re-explain the stack, the layering, the test rules, every time.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 3 -->
+    <section class="chapter chapter-full">
+      <img data-src="img/img3.png" alt="Duke holding back energy blasts from the Anthropic and OpenAI mascots at once">
+      <div class="chapter-text pos-bc">
+        <div class="kicker">chapter 3 · double trouble</div>
+        <h2>Two assistants. Two sets of defaults.</h2>
+        <p>Same question, two different answers, and your conventions in neither of them.</p>
+      </div>
+      <aside class="notes">
+        Problem cards 02 and 04: generic defaults and inconsistent answers.<br>
+        Half the team uses one assistant, half uses another. Each one falls back on its own idea of a "typical" Spring app. Two developers ask the same question and get two different designs, and neither matches ours.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 4 -->
+    <section class="chapter chapter-full">
+      <img data-src="img/img4.png" alt="Duke overwhelmed by energy blasts from the GitHub Copilot, Anthropic and OpenAI mascots">
+      <div class="chapter-text pos-bc">
+        <div class="kicker">chapter 4 · outnumbered</div>
+        <h2>Every tool. Every session. Guessing.</h2>
+        <p>Repeating the rules in every prompt doesn't scale. Something has to change.</p>
+      </div>
+      <aside class="notes">
+        Problem card 03 and the sum of all four. Three tools, a whole team, dozens of sessions a day, and nobody runs the build before saying "done".<br>
+        Pause here. Ask the room: who has re-explained the same convention to an AI this week?<br>
+        Then: let's look at the service we're defending.
+      </aside>
     </section>
 
     <!-- 2b. THE EXAMPLE APP -->
@@ -275,6 +397,24 @@
             └── CampaignJdbcRepository.kt</code></pre>
         </div>
       </div>
+      <aside class="notes">
+        A real, small hexagonal service. No AI configuration yet. Every slide after this adds one file. Watch the tree on the right: the orange entries are what's new, or what the rule on that slide governs.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 5 -->
+    <section class="chapter chapter-full">
+      <img data-src="img/img5.png" alt="Duke and Kodee, the Kotlin mascot, holding a shield made of rule files that deflects blasts from all three AI mascots, next to a crate labeled .claude/rules/">
+      <div class="chapter-text pos-br">
+        <div class="kicker">chapter 5 · the shield</div>
+        <h2>Write the rules down. Once.</h2>
+        <p>In the repo, reviewed like code, loaded by every session. The shield is made of rule files.</p>
+      </div>
+      <aside class="notes">
+        The turn in the story. Duke stops fighting each blast by hand and raises a shield, and the shield is made of rule files. Kodee, the Kotlin mascot, joins in: our stack's conventions are part of the shield.<br>
+        Point at the crate: .claude/rules/. That's the whole idea of this talk. Instead of repeating ourselves in prompts, we write each decision down once, and every session loads it.<br>
+        The file names on the shield are illustrative. Next: how the files actually work, then what goes in ours.
+      </aside>
     </section>
 
     <!-- 3. WHAT THEY ARE -->
@@ -296,12 +436,15 @@
           <ul>
             <li>One file per topic: testing.md, architecture.md, and so on</li>
             <li>Can be scoped to specific file types or paths</li>
-            <li>Loaded alongside CLAUDE.md, same session</li>
+            <li>Loaded automatically, no import needed; path-scoped files load only when matching files are touched</li>
             <li>Keeps the root file short as the project grows</li>
           </ul>
         </div>
       </div>
       <p class="caption">Both are committed to the repo and reviewed like code. The whole team works from the same rules, not just whoever wrote the last prompt.</p>
+      <aside class="notes">
+        HOW, the mechanics. CLAUDE.md loads in full every session, so every line costs context. Files in .claude/rules/ are picked up automatically, with no import needed. A rule file with paths: frontmatter loads only when Claude works on matching files. Both are committed and reviewed like code. That's the whole mechanism.
+      </aside>
     </section>
 
     <!-- 4. EXAMPLE: CLAUDE.md -->
@@ -317,13 +460,21 @@
 - Expert-level audience. Skip basic explanations.
 
 ## Guardrails
-- Proceed only when ~95% confident in the approach.
+- Before editing, read the files you will change and
+  their tests.
 - Never assume unfamiliar code, libraries, or framework
   behavior &mdash; verify by reading the code first.
 - When in doubt, stop and ask. Do not guess.
 
+## Non-negotiables
+- A change that breaks `clean-code.md` is not done,
+  tests included.
+- Never swallow an exception: rethrow, translate, or
+  handle it.
+- Never log secrets, tokens, or personal data. Log ids.
+
 ## Stack
-- Kotlin 1.9, Spring Boot 4, Maven
+- Kotlin 2.2, Spring Boot 4, Maven
 - Persistence: Spring Data JDBC, PostgreSQL
 - Tests: JUnit 5, MockK, Testcontainers for integration tests</code></pre>
         </div>
@@ -345,6 +496,13 @@
             └── <span class="tree-old">CampaignJdbcRepository.kt</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Principle: CLAUDE.md holds only what Claude can't guess.<br>
+        - Communication: sets the level of detail.<br>
+        - Guardrails: concrete, checkable behaviors ("read the files first", "stop and ask"), not vague ones like a confidence percentage the model can't measure.<br>
+        - Non-negotiables: three lines, on purpose. Clean code, never swallowing exceptions, never logging personal data. They're in context from the first message of every session. The details stay in clean-code.md, error-handling.md and observability.md, which is the pattern: the root file states the non-negotiable, and the rule file explains it. Nothing is copied, so nothing drifts.<br>
+        - Stack: exact versions, so it doesn't guess Mockito or H2.
+      </aside>
     </section>
 
     <!-- 4b. EXAMPLE: CLAUDE.md, continued -->
@@ -355,21 +513,17 @@
         <div>
           <div class="filename-bar"><span class="dot"></span><b>CLAUDE.md</b><span>&nbsp;·&nbsp;project root</span></div>
           <pre><code class="language-markdown" data-trim data-noescape>## Architecture
-Hexagonal. Full rules in .claude/rules/architecture.md. Summary:
-domain has no framework imports, usecase depends on domain only,
-adapters live under gateway/.
+- Hexagonal: domain/, usecase/, gateway/. The layering
+  rules are in `architecture.md`.
 
 ## Workflow
-- After any change: mvn test, mvn verify -Pit, then mvn spotless:check
-- Do not report a task done if build, tests, or lint fail
-- New endpoints: plural nouns, resource-based paths
+- A task is done only when every command in
+  `verification.md` passes.
 
-## Rules
-@.claude/rules/testing.md
-@.claude/rules/architecture.md
-@.claude/rules/kotlin.md
-@.claude/rules/api.md
-@.claude/rules/verification.md</code></pre>
+&lt;!-- Maintainers: files in .claude/rules/ load on their
+     own, so never @-import them. Path-scoped rules load
+     when Claude reads a matching file. This comment is
+     stripped before Claude reads CLAUDE.md. --&gt;</code></pre>
         </div>
         <div class="tree-panel">
           <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
@@ -391,11 +545,20 @@ adapters live under gateway/.
     └── <span class="tree-new">rules/</span>
         ├── <span class="tree-new">testing.md</span>
         ├── <span class="tree-new">architecture.md</span>
+        ├── <span class="tree-new">clean-code.md</span>
         ├── <span class="tree-new">kotlin.md</span>
         ├── <span class="tree-new">api.md</span>
+        ├── <span class="tree-new">error-handling.md</span>
+        ├── <span class="tree-new">observability.md</span>
         └── <span class="tree-new">verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Mentioning a file is not importing it. `architecture.md` in backticks is a plain reference: it loads nothing, it just tells a reader where the detail lives. An import is @path, and we don't use any, because everything in .claude/rules/ loads on its own. An @-import would also load a path-scoped rule every time, which defeats the scoping. Anthropic's docs: wrap a path in backticks to mention it without importing.<br>
+        Architecture: one orientation line, no summary. architecture.md loads every session anyway, and a copied summary would drift out of sync.<br>
+        Workflow: points to verification.md instead of copying the commands.<br>
+        The HTML comment is for humans. Anthropic's docs: block-level HTML comments in CLAUDE.md "are stripped before the content is injected into Claude's context". So the maintainer note costs no context. Check what actually loaded with /context, under Memory files.
+      </aside>
     </section>
 
     <!-- 5. EXAMPLE: testing.md -->
@@ -405,18 +568,22 @@ adapters live under gateway/.
       <div class="grid-tree">
         <div>
           <div class="filename-bar"><span class="dot"></span><b>.claude/rules/testing.md</b></div>
-          <pre><code class="language-markdown" data-trim data-noescape># Testing rules
+          <pre><code class="language-markdown" data-trim data-noescape>---
+paths: ["src/test/**"]
+---
+
+# Testing rules
 
 ## Frameworks
 - JUnit 5 + MockK. Never introduce Mockito.
-- Testcontainers for anything touching Postgres. No H2.
+- Testcontainers for anything touching Postgres. No H2:
+  it hides Postgres-only behavior that breaks in prod.
 
 ## Structure
 - One behavior per test. The name states the behavior,
   not the method under test.
 - Always structure the body with // given, // when,
-  // then comments, in that order. No other inline
-  comments.
+  // then comments, in that order. No other comments.
 - Build test data with builders, not inline object
   literals.
 
@@ -450,11 +617,22 @@ adapters live under gateway/.
     └── <span class="tree-old">rules/</span>
         ├── <span class="tree-new">testing.md</span>
         ├── <span class="tree-old">architecture.md</span>
+        ├── <span class="tree-old">clean-code.md</span>
         ├── <span class="tree-old">kotlin.md</span>
         ├── <span class="tree-old">api.md</span>
+        ├── <span class="tree-old">error-handling.md</span>
+        ├── <span class="tree-old">observability.md</span>
         └── <span class="tree-old">verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Note the frontmatter: paths: src/test/** means this file loads only when Claude touches tests.<br>
+        Principles to point at:<br>
+        - Every ban comes with its alternative: MockK, never Mockito. Testcontainers, no H2.<br>
+        - "No H2" explains why. Anthropic's prompting guide says Claude generalizes better when it knows the reason behind a rule.<br>
+        - Checkable: AssertJ vs assertEquals is visible in any diff.<br>
+        - Every rule here came from a real review comment.
+      </aside>
     </section>
 
     <!-- 6. EXAMPLE: architecture.md -->
@@ -503,11 +681,17 @@ adapters live under gateway/.
     └── <span class="tree-old">rules/</span>
         ├── <span class="tree-old">testing.md</span>
         ├── <span class="tree-new">architecture.md</span>
+        ├── <span class="tree-old">clean-code.md</span>
         ├── <span class="tree-old">kotlin.md</span>
         ├── <span class="tree-old">api.md</span>
+        ├── <span class="tree-old">error-handling.md</span>
+        ├── <span class="tree-old">observability.md</span>
         └── <span class="tree-old">verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Layering, written as the actual directory tree, so the model maps the rule straight onto paths. Boundaries are stated as prohibitions ("never depend on each other"), which a reviewer can check.
+      </aside>
     </section>
 
     <!-- 6b. EXAMPLE: architecture.md, continued -->
@@ -520,17 +704,17 @@ adapters live under gateway/.
           <pre><code class="language-markdown" data-trim data-noescape>## Naming
 - Use cases are verbs: CreateCampaign, CancelCampaign.
 - Ports are nouns with a Port suffix: CampaignRepositoryPort.
+- Adapters are named after port + technology:
+  CampaignJdbcRepository, CampaignController.
 
-## Clean Code
-- Small, single-purpose functions; one level of
-  abstraction each.
-- Intention-revealing names; no abbreviations or magic
-  values.
-- No hidden side effects behind getters or "query" methods.
-- Guard clauses over nested if/else.
-- Follow SOLID; one reason to change per class or function.
-- No comments unless asked. Exception: // given/when/then
-  in tests.</code></pre>
+## Reference implementations
+- New use cases follow usecase/CreateCampaign.kt.
+- New persistence adapters follow
+  gateway/jdbc/CampaignJdbcRepository.kt.
+
+## Code quality
+- Structure is defined here. Code-level quality (functions,
+  naming, classes, hygiene) is in clean-code.md.</code></pre>
         </div>
         <div class="tree-panel">
           <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
@@ -552,11 +736,138 @@ adapters live under gateway/.
     <span class="tree-old">└── rules/</span>
         <span class="tree-old">├── testing.md</span>
         <span class="tree-new">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
         <span class="tree-old">├── kotlin.md</span>
         <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
         <span class="tree-old">└── verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Naming gives the model a pattern to copy: verbs for use cases, a Port suffix for ports.<br>
+        Architecture covers structure only. Clean code gets its own file, next slide, because it applies to every line of every change and deserves its own owner and reviewer.
+      </aside>
+    </section>
+
+    <!-- 6b2. EXAMPLE: clean-code.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: clean code, every change</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/clean-code.md</b><span>&nbsp;·&nbsp;no paths: loads every session</span></div>
+          <pre><code class="language-markdown" data-trim data-noescape># Clean code rules
+Applies to every change: production code and tests.
+
+## Functions
+- At most 20 lines and 4 parameters. Beyond that, split
+  the function or introduce a parameter object.
+- Guard clauses over nested if/else. Nesting depth 2 max.
+- Getters and query methods never change state: callers
+  rely on reads being safe to repeat.
+
+## Naming
+- No generic suffixes: Manager, Helper, Util, Data, Info.
+  They hide what the class actually does.
+- No abbreviations: campaignRepository, not campRepo.
+- No magic numbers or strings. Extract a named constant.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-new">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-new">├── clean-code.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+      <aside class="notes">
+        This is the answer to "will the AI write clean code?" Step one: write the standard down so the model can't miss it.<br>
+        - No paths: frontmatter, on purpose. It loads in every session and covers every file.<br>
+        - Numbers instead of adjectives: "20 lines, 4 parameters, nesting depth 2" can be checked. "Small functions" can't.<br>
+        - Banned name suffixes remove the model's favorite shortcuts (CampaignManager, CampaignHelper), and the rule says why.<br>
+        - Notice what's NOT here: "write clean code", "follow SOLID", "use meaningful names". Claude already knows those; Anthropic's best practices say to exclude them. Only our specific, checkable version goes in.<br>
+        The limits are the team's to decide. What matters is that they're numbers, and that detekt uses the same ones.
+      </aside>
+    </section>
+
+    <!-- 6b3. EXAMPLE: clean-code.md, continued -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: clean code, every change (cont.)</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/clean-code.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>## Classes
+- usecase/ depends on ports, never on gateway/ classes.
+- No abstract base classes just to share code. Extract a
+  function or a collaborator instead.
+
+## Hygiene
+- Logic that appears twice is extracted, not copied.
+- No comments unless asked. Exception: // given/when/then
+  in tests. Names explain the code, comments don't.
+- No commented-out code. No TODO without a ticket id.
+- Clean up code you touch, but never refactor unrelated
+  code in the same change: it makes the diff unreviewable.
+
+## Enforcement
+- detekt enforces the numeric limits above in the build.
+- Never add @Suppress to get past a detekt finding.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-new">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-new">├── clean-code.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+      <aside class="notes">
+        Classes: no "follow SOLID" slogan. Anthropic's docs list "self-evident practices like 'write clean code'" as something to leave out, because Claude already knows them. What we write down is our specific version: which layer depends on what, and no base classes just to share code.<br>
+        Hygiene: no copies, no noise comments, no commented-out code. The boy scout rule, limited to the code you touched, so diffs stay reviewable.<br>
+        Enforcement is the key section. The rule says what we want, detekt fails the build when it isn't met, and banning @Suppress closes the obvious way around it. More on this right after verification.md.
+      </aside>
     </section>
 
     <!-- 6c. EXAMPLE: kotlin.md -->
@@ -602,11 +913,17 @@ adapters live under gateway/.
     <span class="tree-old">└── rules/</span>
         <span class="tree-old">├── testing.md</span>
         <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
         <span class="tree-new">├── kotlin.md</span>
         <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
         <span class="tree-old">└── verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Language idioms the model would otherwise mix up. The named-arguments rule is a good example of a specific rule: it gives an exact threshold (more than two parameters) instead of "use named arguments when helpful".
+      </aside>
     </section>
 
     <!-- 6e. EXAMPLE: api.md -->
@@ -616,7 +933,11 @@ adapters live under gateway/.
       <div class="grid-tree">
         <div>
           <div class="filename-bar"><span class="dot"></span><b>.claude/rules/api.md</b></div>
-          <pre><code class="language-markdown" data-trim data-noescape># API rules
+          <pre><code class="language-markdown" data-trim data-noescape>---
+paths: ["src/main/kotlin/**/gateway/controller/**"]
+---
+
+# API rules
 
 ## Controllers
 - Every endpoint is documented (KDoc) and exposed via
@@ -650,11 +971,17 @@ adapters live under gateway/.
     <span class="tree-old">└── rules/</span>
         <span class="tree-old">├── testing.md</span>
         <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
         <span class="tree-old">├── kotlin.md</span>
         <span class="tree-new">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
         <span class="tree-old">└── verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Also path-scoped, to the controller package only. Security by default, with an explicit opt-out. URI conventions come with a do and a don't example: /campaigns/{id}/cancel, never /cancelCampaign. Examples beat descriptions.
+      </aside>
     </section>
 
     <!-- 6f. EXAMPLE: api.md, continued -->
@@ -696,11 +1023,218 @@ adapters live under gateway/.
     <span class="tree-old">└── rules/</span>
         <span class="tree-old">├── testing.md</span>
         <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
         <span class="tree-old">├── kotlin.md</span>
         <span class="tree-new">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
         <span class="tree-old">└── verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        OpenAPI and DTO rules. "Zero missing-schema warnings" is checkable. "Never reuse a DTO for both directions" stops a very common model shortcut.
+      </aside>
+    </section>
+
+    <!-- 6g. EXAMPLE: error-handling.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: error handling</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/error-handling.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>---
+paths: ["src/main/**"]
+---
+
+# Error handling rules
+
+## Domain exceptions
+- Every business error has its own exception: a subclass of
+  the sealed CampaignException in domain/. Named after the
+  business meaning, never after an HTTP status.
+- domain/ never throws Spring or JDBC types.
+- require(...) / check(...) only guard internal invariants.
+  A failure there is a bug, so it becomes a 500.
+
+## Translation at the edge
+- gateway/jdbc translates only the database errors a use
+  case reacts to: DuplicateKeyException becomes
+  CampaignAlreadyExistsException.
+- No SQL or JDBC type ever leaves gateway/.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-new">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-new">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+      <aside class="notes">
+Error handling is a decision Claude can't infer: Kotlin and Spring allow exceptions, Result, sealed types, try/catch per controller or one central handler. Without this file, every session picks a different one. Team decision: sealed exceptions.<br>
+        - One dedicated exception per business error, named after what went wrong (CampaignAlreadyCancelled), never after the HTTP status (Conflict). The domain doesn't know HTTP exists.<br>
+        - require/check are for bugs, not business rules. A business rule that fails gets its own exception, like InvalidCampaignPeriodException.<br>
+        - gateway/jdbc translates only what a use case reacts to. Everything else propagates and becomes a 500.
+      </aside>
+    </section>
+
+    <!-- 6g2. EXAMPLE: error-handling.md, continued -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: error handling (cont.)</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/error-handling.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>## HTTP mapping
+- One @RestControllerAdvice maps exceptions to ProblemDetail
+  (RFC 9457). Controllers never try/catch.
+- CampaignException is mapped with an exhaustive when and
+  no else branch: a new exception without a status fails
+  to compile.
+
+  CampaignNotFoundException          → 404
+  CampaignAlreadyExistsException     → 409
+  CampaignAlreadyCancelledException  → 409
+  InvalidCampaignPeriodException     → 400
+  request DTO validation (@Valid)    → 400
+  anything else                      → 500, no internals
+
+## Never
+- catch Exception or Throwable outside the advice.
+- Swallow an exception: rethrow, translate, or handle it.
+- runCatching in production code: it catches Throwable.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-new">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-new">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+      <aside class="notes">
+The HTTP side, all in one place: the @RestControllerAdvice.<br>
+        - The key trick: CampaignException is sealed and the advice uses an exhaustive when with no else. Add a new exception without a status and the build fails. The compiler enforces the mapping, not the model's memory.<br>
+        - Every status comes from a dedicated exception, except two cases on purpose. @Valid failures on the request DTO are an HTTP concern, so they map to 400 directly. Anything unexpected is a 500 with no internals in the body.<br>
+        - Logging of these exceptions is defined in observability.md (next slide): 5xx at ERROR with stack trace, 4xx at WARN without.<br>
+        - "Never" section: each item has its reason or alternative. runCatching catches Throwable, which hides real bugs.
+      </aside>
+    </section>
+
+    <!-- 6h. EXAMPLE: observability.md -->
+    <section>
+      <div class="kicker">example</div>
+      <h2>Rule: logging &amp; observability</h2>
+      <div class="grid-tree">
+        <div>
+          <div class="filename-bar"><span class="dot"></span><b>.claude/rules/observability.md</b></div>
+          <pre><code class="language-markdown" data-trim data-noescape>---
+paths: ["src/main/**"]
+---
+
+# Observability rules
+
+## Where to log
+- usecase/: one INFO line per completed business action.
+- gateway/: calls to external systems at DEBUG; failures
+  at WARN with the target and the duration.
+- Exceptions are logged once, by the @RestControllerAdvice:
+  5xx at ERROR with stack trace, 4xx at WARN without.
+  Alerts fire on ERROR only.
+  Never log and rethrow.
+- domain/: no logging. It has zero framework imports.
+
+## What to log
+- Key-value pairs, not string concatenation:
+  log.atInfo().addKeyValue("campaignId", id).log("Campaign created")
+- Never log secrets, tokens, or personal data (email,
+  name, phone). Log ids instead: logs are kept for months.
+
+## Metrics and tracing
+- Business counters via Micrometer: campaigns.created.
+  Low-cardinality tags only, never ids.
+- Trace ids come from Micrometer Tracing. Never create or
+  pass them by hand.</code></pre>
+        </div>
+        <div class="tree-panel">
+          <div class="filename-bar"><span class="dot"></span><b>project structure</b></div>
+          <pre><code class="nohighlight" data-trim data-noescape>campaign-service/
+├── <span class="tree-old">CLAUDE.md</span>
+├── <span class="tree-old">pom.xml</span>
+├── <span class="tree-new">src/main/kotlin/com/acme/campaigns/</span>
+│   ├── <span class="tree-old">domain/</span>
+│   │   <span class="tree-old">└── Campaign.kt</span>
+│   ├── <span class="tree-old">usecase/</span>
+│   │   <span class="tree-old">├── CreateCampaign.kt</span>
+│   │   <span class="tree-old">└── CampaignRepositoryPort.kt</span>
+│   └── <span class="tree-old">gateway/</span>
+│       ├── <span class="tree-old">controller/</span>
+│       │   <span class="tree-old">└── CampaignController.kt</span>
+│       └── <span class="tree-old">jdbc/</span>
+│           <span class="tree-old">└── CampaignJdbcRepository.kt</span>
+└── <span class="tree-old">.claude/</span>
+    <span class="tree-old">└── rules/</span>
+        <span class="tree-old">├── testing.md</span>
+        <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
+        <span class="tree-old">├── kotlin.md</span>
+        <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-new">├── observability.md</span>
+        <span class="tree-old">└── verification.md</span></code></pre>
+        </div>
+      </div>
+      <aside class="notes">
+        Observability is tightly linked to error handling: "log once, at the boundary" only works if both files agree. That's why the advice is named in both.<br>
+        - Where: one INFO line per business action in usecase/, so logs read like a timeline of what the service did.<br>
+        - Levels, team decision: 5xx at ERROR with stack trace, 4xx at WARN without one. The client caused a 4xx, so its stack trace is noise. Alerts fire on ERROR only, so one misbehaving client can't page the on-call engineer.<br>
+        - domain/ doesn't log, consistent with architecture.md (zero framework imports). Rules must never contradict each other.<br>
+        - What: key-value pairs make logs searchable. The SLF4J 2 fluent API shown is standard.<br>
+        - Personal data: this is compliance, not style. The rule gives the reason (logs are kept for months) and the alternative (log ids).<br>
+        - Metrics: ids as tags explode cardinality and the metrics bill, so the rule bans them explicitly.<br>
+        The two lines that must never fail (no swallowed exceptions, no personal data in logs) are also in CLAUDE.md under Non-negotiables, because this file is path-scoped and loads only once Claude opens production code.
+      </aside>
     </section>
 
     <!-- 7. EXAMPLE: verification.md -->
@@ -716,12 +1250,15 @@ adapters live under gateway/.
 1. mvn test              run the unit tests
 2. mvn verify -Pit       run the integration tests
 3. mvn spotless:check    lint the code (ktlint via Spotless)
+4. mvn detekt:check      clean-code limits (size, nesting)
 
 ## Rules
 - Do not report a task finished if any command fails.
 - If a command is missing or errors out, stop and ask.
   Do not guess.
 - Never suppress a linter warning just to make it pass.
+- Before reporting done, re-read the diff against
+  clean-code.md and fix every violation.
 - Dead code check: scan for unused imports, functions,
   classes, and parameters after every change. Remove them.
 - Never run git add, git commit, or git push.
@@ -752,11 +1289,204 @@ adapters live under gateway/.
     <span class="tree-old">└── rules/</span>
         <span class="tree-old">├── testing.md</span>
         <span class="tree-old">├── architecture.md</span>
+        <span class="tree-old">├── clean-code.md</span>
         <span class="tree-old">├── kotlin.md</span>
         <span class="tree-old">├── api.md</span>
+        <span class="tree-old">├── error-handling.md</span>
+        <span class="tree-old">├── observability.md</span>
         <span class="tree-new">└── verification.md</span></code></pre>
         </div>
       </div>
+      <aside class="notes">
+        Probably the most valuable file. It defines "done" as commands that pass, not as the model's opinion.<br>
+        - Stop and ask if a command is missing: no guessing.<br>
+        - Step 4, detekt, is what makes clean code enforced and not just requested. It fails the build on the same limits clean-code.md states.<br>
+        - The self-review step makes Claude check its own diff against clean-code.md before it says "done".<br>
+        - Never suppress a lint warning.<br>
+        - No git add/commit/push: humans own history.<br>
+        - The refactoring rules protect behavior: write the test first, then refactor.
+      </aside>
+    </section>
+
+    <!-- 7b. CODE QUALITY: HOW IT IS ENFORCED -->
+    <section>
+      <div class="kicker">code quality</div>
+      <h2>Will the AI actually write clean code?</h2>
+      <p>Not because we asked nicely. Four layers, each catching what the one before it missed:</p>
+      <div class="steps" style="margin-top: 22px;">
+        <div class="step">
+          <div class="num">1</div>
+          <p><b>The rule.</b> clean-code.md loads in every session. Its limits are numbers, not adjectives, so Claude writes to the standard from the first line.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <p><b>Self-review.</b> verification.md makes Claude re-read its own diff against clean-code.md and fix every violation before it reports "done".</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <p><b>The build and a hook.</b> detekt and ktlint fail on violations, and suppressing them is banned. A Stop hook can run them automatically and block Claude from finishing until they pass.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <p><b>The PR.</b> CI runs the same checks, and a human reviews AI code against the same clean-code bar as anyone else's.</p>
+        </div>
+      </div>
+      <p class="caption">A written rule shapes the code; tools and review verify it. When something slips through, it becomes a sharper rule or a stricter detekt threshold.</p>
+      <aside class="notes">
+        This slide is for the question "how do we know the AI will follow clean code?"<br>
+        Be honest: a rule in a Markdown file is strong guidance, not a guarantee. The model follows specific, checkable rules far more reliably than vague ones, but nobody should rely on the rule alone.<br>
+        That's why there are four layers:<br>
+        1. The rule sets the target on every session.<br>
+        2. Self-review catches most slips before a human sees them.<br>
+        3. detekt and ktlint are deterministic. They don't depend on the model's judgment at all. Anthropic's docs are explicit: CLAUDE.md is "context, not enforced configuration"; hooks "are deterministic and guarantee the action happens". A Stop hook that runs detekt is the hard guarantee.<br>
+        4. PR review and CI: AI code gets exactly the same bar as human code.<br>
+        And the loop: every slip that reaches review becomes a sharper rule or a stricter threshold, so quality goes up over time.
+      </aside>
+    </section>
+
+    <!-- 8. HOW: PRINCIPLES -->
+    <section>
+      <div class="kicker">how to write them</div>
+      <h2>Principles behind every file you just saw</h2>
+      <div class="grid3x2">
+        <div class="card">
+          <div class="num">01</div>
+          <h3>CLAUDE.md holds only what Claude can't guess</h3>
+          <p>Stack, guardrails, what "done" means, where the rules live. It costs context in every session, so keep it short.</p>
+        </div>
+        <div class="card">
+          <div class="num">02</div>
+          <h3>One topic per rule file</h3>
+          <p>testing, architecture, clean-code, error-handling, observability&hellip; Each file has an obvious owner and an obvious reviewer.</p>
+        </div>
+        <div class="card">
+          <div class="num">03</div>
+          <h3>Write rules you can check</h3>
+          <p>"AssertJ, never assertEquals" can be checked in review. "Write clean tests" can't.</p>
+        </div>
+        <div class="card">
+          <div class="num">04</div>
+          <h3>Pair every ban with the alternative</h3>
+          <p>"MockK, never Mockito." A ban alone blocks a habit. With the alternative, Claude knows what to do instead.</p>
+        </div>
+        <div class="card">
+          <div class="num">05</div>
+          <h3>"Done" means the commands pass</h3>
+          <p>Name the exact commands. A task isn't finished until the build, tests, and lint are green.</p>
+        </div>
+        <div class="card">
+          <div class="num">06</div>
+          <h3>Grow the rules from real mistakes</h3>
+          <p>When Claude gets something wrong, add or tighten a rule, then review that change in a PR like any code change.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        HOW, the recap. These six principles are what every file you just saw has in common. If you remember one slide, make it this one. Point back at the examples: 01 is CLAUDE.md, 02 is the rules folder, 03 and 04 are testing.md, 05 is verification.md, and 06 is how all of them came about.
+      </aside>
+    </section>
+
+    <!-- 8a. HOW: DO / DON'T -->
+    <section>
+      <div class="kicker">how to write them</div>
+      <h2>Writing rules: do and don't</h2>
+      <div class="dodont">
+        <div class="card">
+          <h3>Do</h3>
+          <ul>
+            <li>Write rules concrete enough to verify: "run mvn test", not "test your changes".</li>
+            <li>Keep each file under 200 lines. Longer files reduce adherence.</li>
+            <li>Use headers and bullets. Claude scans structure like a reader does.</li>
+            <li>Explain the why when it isn't obvious. Claude generalizes from the reason.</li>
+            <li>Pair every ban with the alternative: "MockK, never Mockito".</li>
+            <li>Scope topic rules with paths: so they load only when relevant.</li>
+            <li>Test a rule: change it, then check that Claude's behavior actually changes.</li>
+          </ul>
+        </div>
+        <div class="card dont">
+          <h3>Don't</h3>
+          <ul>
+            <li>State the self-evident: "write clean code", "follow SOLID". Claude knows.</li>
+            <li>Describe what Claude can read in the code: file tours, API docs. Link instead.</li>
+            <li>Include information that changes often. It goes stale and misleads.</li>
+            <li>Let two rules contradict each other. Claude may follow either one.</li>
+            <li>Shout. Use IMPORTANT on one line at most; if everything is important, nothing is.</li>
+            <li>Rely on a rule for what must never fail. Use a hook or a build check.</li>
+            <li>Let it grow unreviewed. If Claude already does it right, delete the line.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="source">sources: code.claude.com/docs/en/best-practices · code.claude.com/docs/en/memory</div>
+      <aside class="notes">
+        This is the checklist for anyone writing or reviewing a rule file. Every line comes from Anthropic's own docs, not from opinion.<br>
+        Do:<br>
+        - "Write instructions that are concrete enough to verify" (memory docs).<br>
+        - "Target under 200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence."<br>
+        - Headers and bullets: "organized sections are easier to follow than dense paragraphs".<br>
+        - The why: the prompting guide says explaining why "can help Claude better understand your goals", and "Claude is smart enough to generalize from the explanation".<br>
+        - Test it: "Treat CLAUDE.md like code: review it when things go wrong, prune it regularly, and test changes by observing whether Claude's behavior actually shifts."<br>
+        Don't: this column is the "Exclude" table from the best-practices page, almost word for word, including "Self-evident practices like 'write clean code'".<br>
+        - On shouting: "If you emphasize many lines, none of them stands out."<br>
+        - On pruning: "Bloated CLAUDE.md files cause Claude to ignore your actual instructions!"<br>
+        - Tip for maintainers: HTML comments (&lt;!-- --&gt;) in CLAUDE.md are stripped before Claude reads it, so you can leave notes for humans at no context cost.
+      </aside>
+    </section>
+
+    <!-- 8a2. HOW: BEFORE / AFTER -->
+    <section>
+      <div class="kicker">how to write them</div>
+      <h2>From vague to specific</h2>
+      <div class="ba">
+        <div class="h">PRINCIPLE</div><div class="h">VAGUE: CLAUDE GUESSES</div><div class="h">SPECIFIC: CLAUDE FOLLOWS</div>
+        <div class="why">Measurable</div><div class="bad">Write clean code.</div><div class="good">Functions: at most 20 lines, 4 parameters, nesting depth 2.</div>
+        <div class="why">A command</div><div class="bad">Test your changes.</div><div class="good">After every change: mvn test, then mvn verify -Pit.</div>
+        <div class="why">A location</div><div class="bad">Keep files organized.</div><div class="good">Outbound persistence adapters live in gateway/jdbc/.</div>
+        <div class="why">The alternative</div><div class="bad">Don't use Mockito.</div><div class="good">Use MockK for mocks. Never introduce Mockito.</div>
+        <div class="why">The reason</div><div class="bad">NEVER use H2!!</div><div class="good">No H2: it hides Postgres-only behavior that breaks in prod.</div>
+        <div class="why">An example</div><div class="bad">Follow our REST style.</div><div class="good">/campaigns/{id}/cancel, never /cancelCampaign.</div>
+      </div>
+      <div class="source">first three rows adapted from the "Specificity" examples in code.claude.com/docs/en/memory</div>
+      <aside class="notes">
+        The single most useful skill for writing rules: turn an adjective into something checkable.<br>
+        Walk the rows. Each specific version could be checked by a reviewer, or by a tool, in a diff. The vague version can't, so Claude fills the gap with its own defaults.<br>
+        The first three rows mirror Anthropic's own examples: "Use 2-space indentation" instead of "Format code properly", "Run npm test before committing" instead of "Test your changes", "API handlers live in src/api/handlers/" instead of "Keep files organized".<br>
+        Good exercise for the team: take your current CLAUDE.md, find every adjective, and rewrite it like this.
+      </aside>
+    </section>
+
+    <!-- 8a3. HOW: CODE EXAMPLES? -->
+    <section>
+      <div class="kicker">how to write them</div>
+      <h2>Should rules include code examples?</h2>
+      <div class="grid3x2" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="card">
+          <div class="num">✓</div>
+          <h3>Yes: short, inline</h3>
+          <p>A one-line right-vs-wrong example beats a description. Anthropic calls examples "one of the most reliable ways to steer" Claude's output.</p>
+        </div>
+        <div class="card">
+          <div class="num">✓</div>
+          <h3>Better: point to a real file</h3>
+          <p>"New use cases follow usecase/CreateCampaign.kt." Always up to date, reviewed, and costs nothing until Claude opens it.</p>
+        </div>
+        <div class="card">
+          <div class="num">✗</div>
+          <h3>Avoid: pasted classes</h3>
+          <p>A full code block loads every session, goes stale, and gets copied closely, mistakes included. If you really need a template, use a path-scoped rule or a skill.</p>
+        </div>
+      </div>
+      <div class="filename-bar"><span class="dot"></span><b>.claude/rules/architecture.md</b><span>&nbsp;·&nbsp;the recommended form</span></div>
+      <pre><code class="language-markdown" data-trim data-noescape>## Reference implementations
+- New use cases follow usecase/CreateCampaign.kt.
+- New persistence adapters follow gateway/jdbc/CampaignJdbcRepository.kt.</code></pre>
+      <div class="source">sources: code.claude.com/docs/en/best-practices ("Reference existing patterns") · platform.claude.com prompting best practices ("Use examples effectively")</div>
+      <aside class="notes">
+        Short answer: yes to examples, no to pasted code.<br>
+        - Anthropic's prompting guide: "Examples are one of the most reliable ways to steer Claude's output format, tone, and structure." It also warns to vary them "enough that Claude doesn't pick up unintended patterns". Claude copies examples closely, so a flawed example spreads.<br>
+        - Claude Code best practices, "Reference existing patterns": point Claude to a pattern in your codebase ("HotDogWidget.php is a good example") instead of describing it.<br>
+        - The same page lists "Anything Claude can figure out by reading code" and "Long explanations or tutorials" under Exclude, and says to use skills for knowledge "only relevant sometimes", because they load on demand.<br>
+        So: one-line do/don't examples inline (our api.md does this), a pointer to a reference file for bigger patterns, and never a pasted class in CLAUDE.md. The docs don't forbid code blocks in rules, but these three habits follow from their guidance.<br>
+        Important: the reference file must itself be clean code. Claude will copy whatever it finds there.
+      </aside>
     </section>
 
     <!-- 9. GETTING STARTED -->
@@ -766,7 +1496,7 @@ adapters live under gateway/.
       <div class="steps">
         <div class="step">
           <div class="num">1</div>
-          <p>Start with one CLAUDE.md at the project root: stack, layering rules, the two commands to run after a change.</p>
+          <p>Run <span style="font-family: var(--mono); color: var(--accent);">/init</span> for a first CLAUDE.md, then trim it to what Claude can't guess.</p>
         </div>
         <div class="step">
           <div class="num">2</div>
@@ -778,43 +1508,49 @@ adapters live under gateway/.
         </div>
         <div class="step">
           <div class="num">4</div>
-          <p>A rule that gets ignored needs to be more specific, not repeated louder.</p>
+          <p>A rule gets ignored? Run <span style="font-family: var(--mono); color: var(--accent);">/context</span> to check it loaded. If it did, make it more specific, not louder.</p>
         </div>
       </div>
+      <aside class="notes">
+        Start small: one root file, and /init gives you a first draft. Trim it hard: cut what Claude could work out from the code, add the team decisions it can't see: stack, layering rules, the clean code standard, and the commands that must pass after every change. Split into rule files when it grows past a few topics. Commit and review.<br>
+        When a rule is ignored, check the cheap thing first: /context lists the loaded files under Memory files. If the file isn't there, Claude never saw it. If it is, the rule needs to be more specific. Repeating it louder or in capitals doesn't help. /memory opens the files for editing.
+      </aside>
     </section>
 
     <!-- 10. WHY IT MATTERS -->
     <section>
       <div class="kicker">why it matters</div>
-      <h2>Why bother with rules at all?</h2>
-      <div class="grid2">
-        <div class="why-col">
-          <ul>
-            <li><b>Fewer hallucinated conventions.</b> Claude answers from
-              the rule instead of guessing how your team does things.</li>
-            <li><b>Consistent, team-decided behavior.</b> Every session
-              follows the same conventions, not whoever wrote the last
-              prompt.</li>
-            <li><b>Easier for outside contributors.</b> A new teammate,
-              or another team opening a PR, follows the same file
-              everyone else does.</li>
-          </ul>
-        </div>
-        <div class="why-col">
-          <ul>
-            <li><b>Less spent rediscovering the codebase.</b> No
-              re-exploring it each session to infer conventions that
-              are already written down.</li>
-            <li><b>Faster ramp-up, human or AI.</b> Reading one
-              CLAUDE.md beats reverse-engineering a project from
-              scratch.</li>
-            <li><b>Reviewable like code.</b> Rules live in git and get
-              diffed and reviewed, instead of decaying in a Slack
-              thread.</li>
-          </ul>
-        </div>
+      <h2>Why bother?</h2>
+      <div class="fixes">
+        <div class="card"><div class="was">no memory</div><div class="now">Loaded every session</div></div>
+        <div class="card"><div class="was">generic defaults</div><div class="now">Our conventions, written down</div></div>
+        <div class="card"><div class="was">skipped verification</div><div class="now">Done means the build is green</div></div>
+        <div class="card"><div class="was">inconsistent answers</div><div class="now">One standard for the whole team</div></div>
       </div>
-      <p class="caption">Each of these maps back to a problem from the start of this talk: no memory, generic defaults, skipped verification, inconsistent answers.</p>
+      <p class="caption" style="font-size: 0.75em; margin-top: 40px;">Clean code included: the same bar for AI code and human code.</p>
+      <aside class="notes">
+        Close the loop from the start of the talk. Each struck-through word is a problem from the problem slide and chapters 2 to 4; each headline is its fix.<br>
+        - No memory: CLAUDE.md and the rule files load at the start of every session. Less time rediscovering the codebase.<br>
+        - Generic defaults: architecture.md, clean-code.md, kotlin.md, error-handling.md and observability.md describe this codebase, so Claude answers from the rule instead of guessing.<br>
+        - Skipped verification: verification.md defines done as commands that pass, with detekt enforcing the clean-code limits.<br>
+        - Inconsistent answers: rules are committed and reviewed like code, so every session and every developer works from the same ones, not from whoever wrote the last prompt.<br>
+        Bonus points if asked: faster ramp-up for new teammates (human or AI), and outside contributors follow the same files as everyone else.
+      </aside>
+    </section>
+
+    <!-- CHAPTER 6 -->
+    <section class="chapter chapter-full">
+      <img data-src="img/img6.png" alt="Duke holding the Anthropic, OpenAI and GitHub Copilot mascots captured in balls, next to Kodee and an open crate of rule files labeled .claude/rules/">
+      <div class="chapter-text pos-br">
+        <div class="kicker">chapter 6 · tamed</div>
+        <h2>Every tool plays by our rules.</h2>
+        <p>Same rule files, whichever assistant the team picks. The AI works for the codebase, not the other way around.</p>
+      </div>
+      <aside class="notes">
+        The ending. The rival flags in the background are down, and every assistant is in its ball: working for us, on our terms.<br>
+        The message: the rules crate is what made the difference, not picking the "right" tool. The same written decisions keep Claude, Copilot and the others in line.<br>
+        That's the natural lead into the open discussion: what if you're not on Claude Code?
+      </aside>
     </section>
 
     <!-- 11. OPEN DISCUSSION -->
@@ -849,6 +1585,9 @@ adapters live under gateway/.
           <p>The file name changes. The idea &mdash; write the decision down once, let every session and every tool read it &mdash; doesn't.</p>
         </div>
       </div>
+      <aside class="notes">
+        Open it up. The file name differs per tool, the idea doesn't. Ask the room which tools they use and whether one AGENTS.md could serve all of them.
+      </aside>
     </section>
 
     <!-- 12. COPILOT PRACTICAL -->
@@ -881,6 +1620,9 @@ applyTo: "src/test/**"
         </div>
       </div>
       <p class="caption">Confirmed for GitHub's Copilot coding agent as of 2026. Copilot Chat in VS Code has its own, separate AGENTS.md support, which was opt-in at last check &mdash; verify before relying on it.</p>
+      <aside class="notes">
+        Practical path for Copilot users. Same content, different location and frontmatter key: applyTo for Copilot, paths for Claude Code. Tool support changes fast, so verify before relying on it.
+      </aside>
     </section>
 
   </div>
@@ -888,6 +1630,7 @@ applyTo: "src/test/**"
 
 <script src="vendor/reveal.js"></script>
 <script src="vendor/plugin/highlight.js"></script>
+<script src="vendor/plugin/notes.js"></script>
 <script>
   Reveal.initialize({
     hash: true,
@@ -898,7 +1641,17 @@ applyTo: "src/test/**"
     progress: true,
     slideNumber: 'c/t',
     transition: 'fade',
-    plugins: [ RevealHighlight ]
+    highlight: {
+      // Rule files start with YAML frontmatter; without this, a glob like
+      // "src/main/**" opens Markdown bold and the rest of the block turns pink.
+      beforeHighlight: hljs => {
+        hljs.getLanguage('markdown').contains.unshift({
+          begin: /^---$/, end: /^---$/,
+          subLanguage: 'yaml', excludeBegin: true, excludeEnd: true
+        });
+      }
+    },
+    plugins: [ RevealHighlight, RevealNotes ]
   });
 </script>
 </body>
